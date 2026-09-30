@@ -1,0 +1,26 @@
+{
+  "name": "hpp-message-bot",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "description": "Slack bot that runs daily High Performance Planning check-ins and writes each person's Google Doc",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
+    "@slack/web-api": "^8.1.1",
+    "@vercel/functions": "^3.9.9",
+    "luxon": "^3.7.2"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.7.6",
+    "@types/node": "^26.6.3",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

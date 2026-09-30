@@ -1,0 +1,39 @@
+{
+  "_metadata": { "major_version": 1, "minor_version": 1 },
+  "display_information": {
+    "name": "HPP Message Bot",
+    "description": "Daily High Performance Planning check-ins that fill in your own Google Doc",
+    "long_description": "Each morning HPP Message Bot asks your High Performance Planning questions one at a time, then creates High Performance Planning YYYY-MM-DD in your Google Drive. During the day, check off tasks from the Home tab; at night, score your daily review. Only people who sign up get messages, and you can pause or leave any time.",
+    "background_color": "#4a154b"
+  },
+  "features": {
+    "app_home": {
+      "home_tab_enabled": true,
+      "messages_tab_enabled": true,
+      "messages_tab_read_only_enabled": false
+    },
+    "bot_user": { "display_name": "HPP Message Bot", "always_online": true },
+    "slash_commands": [
+      {
+        "command": "/hpp",
+        "url": "https://APP_DOMAIN/api/slack/commands",
+        "description": "Plan today, update tasks, or score your day",
+        "usage_hint": "[start | update | score | pause | resume | settings]",
+        "should_escape": false
+      }
+    ]
+  },
+  "oauth_config": {
+    "scopes": { "bot": ["chat:write", "commands", "im:history", "im:write", "users:read"] }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "request_url": "https://APP_DOMAIN/api/slack/events",
+      "bot_events": ["app_home_opened", "message.im"]
+    },
+    "interactivity": { "is_enabled": true, "request_url": "https://APP_DOMAIN/api/slack/interactions" },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}
