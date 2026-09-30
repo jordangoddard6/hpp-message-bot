@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  fillRequests, readCarry, readTasks, scoreRequests, taskColorRequests, templateHtml, templateProblem,
+  fillRequests, readCarry, readTasks, scoreRequests, taskColorRequests, taskHash, templateHtml, templateProblem,
 } from '../lib/hppdoc.js';
 import { DocSim, templateSpec } from './docsim.js';
 
@@ -69,7 +69,7 @@ describe('filling a day', () => {
   it('graying tasks marks them done and they drop out of carry-over', () => {
     const sim = filled();
     const tasks = readTasks(sim.json());
-    const change = { ...tasks[1], done: true };
+    const change = { area: tasks[1].area, index: tasks[1].index, hash: taskHash(tasks[1].text), done: true };
     const { requests, applied } = taskColorRequests(sim.json(), [change], '#b7b7b7');
     expect(applied).toBe(1);
     sim.apply(requests);
@@ -83,7 +83,7 @@ describe('filling a day', () => {
 
   it('skips a task whose text changed since the list was read', () => {
     const sim = filled();
-    const { applied } = taskColorRequests(sim.json(), [{ area: 'work', index: 0, text: 'Something else', done: true }], '#b7b7b7');
+    const { applied } = taskColorRequests(sim.json(), [{ area: 'work', index: 0, hash: taskHash('Something else'), done: true }], '#b7b7b7');
     expect(applied).toBe(0);
   });
 

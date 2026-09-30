@@ -1,6 +1,7 @@
 // Pure functions over Google Docs API JSON: find the HPP sections, read carry-over and
 // tasks, and build batchUpdate requests. Sections are located by their labels (and tables
 // by their first cell), so any doc with the HPP layout works.
+import { createHash } from 'node:crypto';
 import { AREAS, QUESTIONS, REVIEW_ROWS } from './config.js';
 import type { Group, Line, Score, Task } from './types.js';
 
@@ -198,9 +199,13 @@ export function fillRequests(doc: DocJson, answers: Record<string, Line[]>): Req
   return applyInOrder(replaces);
 }
 
+export function taskHash(text: string): string {
+  return createHash('sha256').update(text).digest('base64url').slice(0, 16);
+}
+
 export function taskColorRequests(
   doc: DocJson,
-  changes: { area: string; index: number; text: string; done: boolean }[],
+  changes: { area: string; index: number; hash: string; done: boolean }[],
   gray: string,
 ): { requests: Request[]; applied: number } {
   const tasks = findTable(doc, 'work');
@@ -211,7 +216,7 @@ export function taskColorRequests(
   for (const ch of changes) {
     const q = AREAS.find((a) => a.key === ch.area);
     const p = q && paras(cell(tasks, q.cell!))[ch.index];
-    if (!p || p.text !== ch.text || p.end - 1 <= p.start) continue;
+    if (!p || taskHash(p.text) !== ch.hash || p.end - 1 <= p.start) continue;
     requests.push({
       updateTextStyle: {
         range: { startIndex: p.start, endIndex: p.end - 1 },

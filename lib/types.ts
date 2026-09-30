@@ -20,6 +20,15 @@ export interface Task {
   done: boolean;
 }
 
+// A task as remembered between showing a checklist and saving it: a hash stands in for
+// the text so no task wording is stored.
+export interface TaskRef {
+  area: string;
+  index: number;
+  hash: string;
+  done: boolean;
+}
+
 export interface Score {
   score: number;
   note: string;
@@ -39,7 +48,7 @@ export interface State {
   scores?: (Score | null)[];
   scoreIdx?: number;
   scoredDay?: string;
-  checklist?: { docId: string; items: Task[] }; // last task list shown (Home tab or /hpp update)
+  checklist?: { docId: string; items: TaskRef[] }; // last task list shown (Home tab or /hpp update)
   checklistTs?: string; // /hpp update message
 }
 

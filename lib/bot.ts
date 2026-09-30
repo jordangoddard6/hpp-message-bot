@@ -9,9 +9,10 @@ import {
 import { DOC_PREFIX, QUESTIONS, REVIEW_ROWS, SCHEDULE_AHEAD_DAYS } from './config.js';
 import type { Store } from './db.js';
 import { GoogleAuthError, docUrl, type HppDrive } from './google.js';
+import { taskHash } from './hppdoc.js';
 import type { Block, SlackApi } from './slack.js';
 import { addDays, cycleDay, eveningAt, formatTime, isActiveDay, localDay, morningAt } from './time.js';
-import type { Line, Score, Task, User } from './types.js';
+import type { Line, Score, Task, TaskRef, User } from './types.js';
 
 export interface Ctx {
   user: User;
@@ -83,10 +84,17 @@ async function retireMessage(ctx: Ctx, a: Action) {
 // Discards unfinished answers from an earlier cycle.
 export async function normalizeCycle(ctx: Ctx) {
   const st = ctx.user.state;
-  if (st.phase !== 'idle' && st.day && st.day < cycleDay(ctx.user, ctx.now)) {
+  const cd = cycleDay(ctx.user, ctx.now);
+  if (st.phase !== 'idle' && st.day && st.day < cd) {
     await retire(ctx);
     ctx.user.state = { phase: 'idle', docId: st.docId, docDay: st.docDay, scoredDay: st.scoredDay };
     ctx.user.carry = null;
+  }
+  // Scores, notes and the checklist only live for their own day.
+  const s = ctx.user.state;
+  if (s.docDay && s.docDay < cd && (s.scores || s.checklist)) {
+    delete s.scores;
+    delete s.checklist;
   }
 }
 
@@ -391,6 +399,9 @@ async function scoreAction(ctx: Ctx, a: Action) {
 
 // ---------- task checklist ----------
 
+const refs = (tasks: Task[]): TaskRef[] =>
+  tasks.map((t) => ({ area: t.area, index: t.index, hash: taskHash(t.text), done: t.done }));
+
 async function sendChecklist(ctx: Ctx) {
   const st = ctx.user.state;
   const docId = todaysDoc(ctx);
@@ -402,7 +413,7 @@ async function sendChecklist(ctx: Ctx) {
   if (st.checklistTs) {
     await ctx.slack.update(ctx.user.dmChannel!, st.checklistTs, 'Replaced by a newer list.', []).catch(() => undefined);
   }
-  st.checklist = { docId, items: tasks };
+  st.checklist = { docId, items: refs(tasks) };
   st.checklistTs = await say(ctx, 'Update your tasks', updateMessageBlocks(today(ctx), tasks));
 }
 
@@ -421,8 +432,8 @@ async function saveChecklist(ctx: Ctx, a: Action) {
     for (const v of Object.values(acts)) (v.selected_options || []).forEach((o) => picked.add(o.value));
   }
   const changes = st.checklist.items
-    .map((t) => ({ ...t, done: picked.has(`${t.area}:${t.index}`), was: t.done }))
-    .filter((c) => c.done !== c.was);
+    .filter((t) => picked.has(`${t.area}:${t.index}`) !== t.done)
+    .map((t) => ({ ...t, done: !t.done }));
   let applied = 0;
   try {
     applied = changes.length ? await ctx.drive.applyTaskChanges(docId, changes) : 0;
@@ -540,7 +551,7 @@ export async function renderHome(ctx: Ctx) {
   if (docId && u.refreshTokenEnc && !u.needsReconnect) {
     try {
       tasks = await ctx.drive.readTasks(docId);
-      if (tasks) u.state.checklist = { docId, items: tasks };
+      if (tasks) u.state.checklist = { docId, items: refs(tasks) };
     } catch (e) {
       if (e instanceof GoogleAuthError) await authLost(ctx);
       else tasks = null;

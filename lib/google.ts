@@ -6,7 +6,7 @@ import {
   fillRequests, readCarry, readTasks, scoreRequests, taskColorRequests, templateHtml, templateProblem,
   type DocJson, type Request,
 } from './hppdoc.js';
-import type { Group, Line, Score, Task } from './types.js';
+import type { Group, Line, Score, Task, TaskRef } from './types.js';
 
 const SCOPES = ['openid', 'email', 'https://www.googleapis.com/auth/drive.file'];
 const DOC_MIME = 'application/vnd.google-apps.document';
@@ -90,7 +90,7 @@ export interface HppDrive {
   createDailyDoc(folderId: string, templateId: string, day: string, answers: Record<string, Line[]>): Promise<string>;
   trash(fileId: string): Promise<void>;
   readTasks(docId: string): Promise<Task[] | null>; // null if the doc is gone
-  applyTaskChanges(docId: string, changes: (Task & { done: boolean })[]): Promise<number>;
+  applyTaskChanges(docId: string, changes: TaskRef[]): Promise<number>;
   writeScores(docId: string, scores: (Score | null)[]): Promise<number>;
 }
 

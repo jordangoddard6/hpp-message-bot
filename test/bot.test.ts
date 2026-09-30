@@ -7,7 +7,7 @@ import {
 import type { Store } from '../lib/db.js';
 import type { HppDrive } from '../lib/google.js';
 import type { Block, SlackApi } from '../lib/slack.js';
-import type { Group, Line, ScheduledRow, Score, Task, User } from '../lib/types.js';
+import type { Group, Line, ScheduledRow, Score, Task, TaskRef, User } from '../lib/types.js';
 
 // ---------- fakes ----------
 
@@ -77,7 +77,7 @@ class FakeDrive implements HppDrive {
     return ['work', 'relations', 'physical', 'emotional'].flatMap((area) =>
       (d.answers[area] || []).map((l, index) => ({ area, index, text: l.text, done: d.done.has(`${area}:${index}`) })));
   }
-  async applyTaskChanges(id: string, changes: (Task & { done: boolean })[]) {
+  async applyTaskChanges(id: string, changes: TaskRef[]) {
     const d = this.doc(id);
     changes.forEach((c) => (c.done ? d.done.add(`${c.area}:${c.index}`) : d.done.delete(`${c.area}:${c.index}`)));
     return changes.length;

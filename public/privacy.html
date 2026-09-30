@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy</title>
+<meta name="description" content="How HPP Message Bot handles your Slack and Google data.">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body>
+<main>
+  <p><a href="/">← HPP Message Bot</a></p>
+  <h1>Privacy Policy</h1>
+  <p class="lede">Last updated September 30, 2026</p>
+
+  <p>HPP Message Bot (“the app”) is a free, non-commercial Slack app for daily High Performance Planning, run by Jordan Goddard for a class. This page explains what data it uses and why.</p>
+
+  <h2>What the app accesses</h2>
+  <ul>
+    <li><strong>Slack:</strong> your Slack user ID, time zone, and the messages you send to the app in your direct messages with it. It can’t read any other conversations.</li>
+    <li><strong>Google:</strong> your email address, and permission to create and edit files the app itself creates in your Google Drive (Google’s <code>drive.file</code> permission). The app <strong>cannot</strong> see, open, or change any other files in your Drive.</li>
+  </ul>
+
+  <h2>What the app stores, and for how long</h2>
+  <ul>
+    <li><strong>Your morning answers</strong> (and the unfinished items carried over from your previous doc): kept only until your doc for that day is created, then deleted. Unfinished answers are deleted at your next morning time.</li>
+    <li><strong>Your daily review scores and notes:</strong> kept for the rest of that day so you can go back and change them, then deleted at your next morning time. They’re also saved in your doc.</li>
+    <li><strong>Your settings and connection:</strong> your Slack user ID, Google email, your chosen times and days, whether you’re paused, and the IDs of your planning folder, template and today’s doc. Your Google access token is stored encrypted.</li>
+    <li><strong>Error records:</strong> when something fails, the app records which step failed and the error message, never what you wrote. These are deleted after 30 days.</li>
+  </ul>
+  <p>Your planning docs are stored in <strong>your</strong> Google Drive and belong to you. The app doesn’t keep copies of them.</p>
+
+  <h2>How your data is used</h2>
+  <p>Only to run the app for you: asking your questions, creating and updating your planning docs, and sending your scheduled messages. Your data is never sold, shared with anyone else, used for advertising, or used to train AI models. The app’s use of information received from Google APIs follows the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+  <h2>Where it’s processed</h2>
+  <p>The app runs on Vercel and stores its data in a Neon Postgres database, both in the United States. Messages are delivered by Slack. Your messages to the app also remain in your Slack direct messages with it, like any Slack conversation, under your workspace’s message retention settings.</p>
+
+  <h2>Leaving and deleting your data</h2>
+  <p>Press <strong>Leave and delete my data</strong> on the app’s Home tab in Slack. The app immediately deletes everything it stores about you and gives up its access to your Google account. Your docs stay in your Drive. You can also remove the app’s access at any time from your Google Account’s “Third-party apps & services” page.</p>
+
+  <h2>Contact</h2>
+  <p>Questions or deletion requests: <a href="mailto:jordangoddard6@gmail.com">jordangoddard6@gmail.com</a>.</p>
+</main>
+</body>
+</html>
