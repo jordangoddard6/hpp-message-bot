@@ -114,6 +114,14 @@ export async function ensureScheduled(ctx: Ctx) {
   for (const r of rows) {
     if (r.day < addDays(current, -1)) await ctx.store.removeScheduled(u.id, r.kind, r.day);
   }
+  // Drop scheduled messages Slack has that we have no record of (e.g. from a failed
+  // sign-up whose database changes were rolled back), so they never arrive.
+  if (u.dmChannel) {
+    const known = new Set(rows.map((r) => r.scheduledId));
+    for (const id of await ctx.slack.listScheduled(u.dmChannel)) {
+      if (!known.has(id)) await ctx.slack.unschedule(u.dmChannel, id);
+    }
+  }
   if (u.paused || u.needsReconnect || !u.refreshTokenEnc || !u.dmChannel) return;
   const soon = ctx.now.plus({ minutes: 1 });
   for (let i = 0; i < SCHEDULE_AHEAD_DAYS; i++) {

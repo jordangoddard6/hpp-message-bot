@@ -47,16 +47,17 @@ export async function GET(request: Request): Promise<Response> {
       await store.saveUser(user);
       const ctx = makeCtx(user, store, who);
       ctx.now = DateTime.utc();
-      await ensureScheduled(ctx);
+      // The account is saved; problems after this point are logged, not fatal.
+      await ensureScheduled(ctx).catch((e) => logError(who.userId, 'signup-schedule', e));
       await store.saveUser(ctx.user);
-      await renderHome(ctx);
+      await renderHome(ctx).catch((e) => logError(who.userId, 'signup-home', e));
       const rows = await store.listScheduled(user.id);
       await slack.post(dm, reconnect ? 'Reconnected' : 'You’re all set!', [{
         type: 'section',
         text: { type: 'mrkdwn', text: reconnect && existing?.refreshTokenEnc
           ? '✅ *Google Drive reconnected.* Your daily messages are back on.'
           : welcomeText(ctx, rows) },
-      }]);
+      }]).catch((e) => logError(who.userId, 'signup-welcome', e));
     });
     return page('You’re all set!', 'Your planning folder is ready in Google Drive. Head back to Slack – your questions will arrive at your morning time.', 200, back);
   } catch (e) {

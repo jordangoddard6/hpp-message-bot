@@ -23,6 +23,7 @@ class FakeSlack implements SlackApi {
   async update(_c: string, ts: string, text: string) { this.updates.push({ ts, text }); }
   async schedule(_c: string, postAt: number, _t: string, blocks?: Block[]) { const id = `s${++this.n}`; this.scheduled.set(id, { postAt, blocks }); return id; }
   async unschedule(_c: string, id: string) { this.unscheduled.push(id); this.scheduled.delete(id); }
+  async listScheduled() { return [...this.scheduled.keys()]; }
   async publishHome() { this.homes++; }
   async openModal() {}
   async openDm() { return 'D1'; }

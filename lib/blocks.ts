@@ -11,8 +11,9 @@ export const CHUNK = 10; // Slack allows at most 10 options per checkbox group
 
 const section = (text: string): Block => ({ type: 'section', text: { type: 'mrkdwn', text } });
 const context = (text: string): Block => ({ type: 'context', elements: [{ type: 'mrkdwn', text }] });
+// Slack rejects an empty `value`, so it's only included when there is one.
 const button = (text: string, action_id: string, value = '', style?: 'primary' | 'danger'): Block =>
-  ({ type: 'button', text: plain(text), action_id, value, ...(style ? { style } : {}) });
+  ({ type: 'button', text: plain(text), action_id, ...(value ? { value } : {}), ...(style ? { style } : {}) });
 const linkButton = (text: string, action_id: string, url: string): Block =>
   ({ type: 'button', text: plain(text), action_id, url });
 const actions = (elements: Block[], block_id?: string): Block =>

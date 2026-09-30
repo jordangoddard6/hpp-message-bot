@@ -9,6 +9,7 @@ export interface SlackApi {
   update(channel: string, ts: string, text: string, blocks?: Block[]): Promise<void>;
   schedule(channel: string, postAt: number, text: string, blocks?: Block[]): Promise<string>; // scheduled id
   unschedule(channel: string, scheduledId: string): Promise<void>;
+  listScheduled(channel: string): Promise<string[]>; // ids of pending scheduled messages
   publishHome(userId: string, blocks: Block[]): Promise<void>;
   openModal(triggerId: string, view: Block): Promise<void>;
   openDm(userId: string): Promise<string>;
@@ -38,6 +39,16 @@ export const slack: SlackApi = {
       // Already sent or already deleted.
       if (!/invalid_scheduled_message_id/.test(String((e as Error).message))) throw e;
     }
+  },
+  async listScheduled(channel) {
+    const ids: string[] = [];
+    let cursor: string | undefined;
+    do {
+      const res = await web().chat.scheduledMessages.list({ channel, cursor, limit: 100 });
+      for (const m of res.scheduled_messages || []) if (m.id) ids.push(m.id);
+      cursor = res.response_metadata?.next_cursor || undefined;
+    } while (cursor);
+    return ids;
   },
   async publishHome(userId, blocks) {
     await web().views.publish({ user_id: userId, view: { type: 'home', blocks } as never });
