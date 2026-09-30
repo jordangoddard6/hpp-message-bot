@@ -252,7 +252,7 @@ async function finishMorning(ctx: Ctx) {
   await say(ctx, 'Your plan is ready.', [{
     type: 'section',
     text: { type: 'mrkdwn', text: `✅ <${docUrl(docId)}|${DOC_PREFIX}${day}> is ready.\n\n` +
-      'Check off finished tasks on my *Home* tab or with `/hpp update`.' },
+      'Check off finished tasks on my *Home* tab or with `/hpp-update`.' },
   }]);
 }
 
@@ -414,7 +414,7 @@ async function sendChecklist(ctx: Ctx) {
   const st = ctx.user.state;
   const docId = todaysDoc(ctx);
   if (st.phase === 'morning') return void await say(ctx, 'Finish the morning questions first.');
-  if (!docId) return void await say(ctx, 'There’s no doc for today yet. Start one with `/hpp start`.');
+  if (!docId) return void await say(ctx, 'There’s no doc for today yet. Start one with `/hpp-start`.');
   const tasks = await ctx.drive.readTasks(docId);
   if (tasks === null) return void await say(ctx, 'I couldn’t open today’s doc. Was it moved to the trash?');
   if (!tasks.length) return void await say(ctx, 'Today’s task table is empty.');
@@ -430,7 +430,7 @@ async function saveChecklist(ctx: Ctx, a: Action) {
   const docId = todaysDoc(ctx);
   if (!docId || a.value !== today(ctx) || st.checklist?.docId !== docId) {
     if (!a.fromHome) await ctx.slack.update(a.channel!, a.messageTs!, 'This list is out of date.', [
-      { type: 'section', text: { type: 'mrkdwn', text: 'This list is out of date. Use `/hpp update` for a fresh one.' } },
+      { type: 'section', text: { type: 'mrkdwn', text: 'This list is out of date. Use `/hpp-update` for a fresh one.' } },
     ]);
     return;
   }
@@ -644,5 +644,5 @@ export function welcomeText(ctx: Ctx, rows: { kind: string; day: string }[]): st
   const next = rows.filter((r) => r.kind === 'morning').map((r) => r.day).sort()[0];
   const when = next ? `${prettyDay(next)} at ${formatTime(ctx.user.morningTime)}` : 'when you resume';
   return `👋 *You’re all set!* Your first planning questions arrive ${when}.\n\n` +
-    'Change your times and days, pause, or check off tasks on my *Home* tab. Want to start now? `/hpp start`';
+    'Change your times and days, pause, or check off tasks on my *Home* tab. Want to start now? `/hpp-start`';
 }

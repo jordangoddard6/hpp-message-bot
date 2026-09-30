@@ -10,9 +10,16 @@ const COMMANDS: Record<string, { run: (ctx: Ctx) => Promise<void>; reply: string
   start: { run: cmdStart, reply: 'Starting today’s questions in your messages with me.' },
   update: { run: cmdUpdate, reply: 'Sent your task list to your messages with me.' },
   score: { run: cmdScore, reply: 'Starting your daily review in your messages with me.' },
-  pause: { run: cmdPause, reply: '⏸ Paused. No daily messages until you `/hpp resume`.' },
+  pause: { run: cmdPause, reply: '⏸ Paused. No daily messages until you `/hpp-resume`.' },
   resume: { run: cmdResume, reply: '▶️ Resumed. Your daily messages are back on.' },
 };
+
+// `/hpp start` and `/hpp-start` do the same thing; the hyphenated forms exist so each
+// option shows up in Slack's command autocomplete.
+export function subcommand(command: string, text: string): string {
+  const fromName = command.trim().toLowerCase().replace(/^\/hpp-?/, '');
+  return fromName || text.trim().toLowerCase();
+}
 
 const ephemeral = (text: string, blocks?: unknown[]) =>
   Response.json({ response_type: 'ephemeral', text, ...(blocks ? { blocks } : {}) });
@@ -26,7 +33,7 @@ export async function POST(request: Request): Promise<Response> {
     teamId: form.get('team_id')!,
     appId: form.get('api_app_id'),
   };
-  const sub = (form.get('text') || '').trim().toLowerCase();
+  const sub = subcommand(form.get('command') || '/hpp', form.get('text') || '');
 
   if (!sub || sub === 'help') return ephemeral('HPP Message Bot', menuBlocks());
 

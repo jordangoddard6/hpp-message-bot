@@ -1,5 +1,8 @@
 {
-  "_metadata": { "major_version": 1, "minor_version": 1 },
+  "_metadata": {
+    "major_version": 1,
+    "minor_version": 1
+  },
   "display_information": {
     "name": "HPP Message Bot",
     "description": "Daily High Performance Planning check-ins that fill in your own Google Doc",
@@ -12,26 +15,79 @@
       "messages_tab_enabled": true,
       "messages_tab_read_only_enabled": false
     },
-    "bot_user": { "display_name": "HPP Message Bot", "always_online": true },
+    "bot_user": {
+      "display_name": "HPP Message Bot",
+      "always_online": true
+    },
     "slash_commands": [
       {
         "command": "/hpp",
         "url": "https://hpp-message-bot.vercel.app/api/slack/commands",
-        "description": "Plan today, update tasks, or score your day",
+        "description": "Menu for HPP Message Bot",
         "usage_hint": "[start | update | score | pause | resume | settings]",
+        "should_escape": false
+      },
+      {
+        "command": "/hpp-start",
+        "url": "https://hpp-message-bot.vercel.app/api/slack/commands",
+        "description": "Start today’s planning questions",
+        "should_escape": false
+      },
+      {
+        "command": "/hpp-update",
+        "url": "https://hpp-message-bot.vercel.app/api/slack/commands",
+        "description": "Check off today’s finished tasks",
+        "should_escape": false
+      },
+      {
+        "command": "/hpp-score",
+        "url": "https://hpp-message-bot.vercel.app/api/slack/commands",
+        "description": "Do today’s daily review now",
+        "should_escape": false
+      },
+      {
+        "command": "/hpp-pause",
+        "url": "https://hpp-message-bot.vercel.app/api/slack/commands",
+        "description": "Pause your daily messages",
+        "should_escape": false
+      },
+      {
+        "command": "/hpp-resume",
+        "url": "https://hpp-message-bot.vercel.app/api/slack/commands",
+        "description": "Turn your daily messages back on",
+        "should_escape": false
+      },
+      {
+        "command": "/hpp-settings",
+        "url": "https://hpp-message-bot.vercel.app/api/slack/commands",
+        "description": "Change your times and days",
         "should_escape": false
       }
     ]
   },
   "oauth_config": {
-    "scopes": { "bot": ["chat:write", "commands", "im:history", "im:write", "users:read"] }
+    "scopes": {
+      "bot": [
+        "chat:write",
+        "commands",
+        "im:history",
+        "im:write",
+        "users:read"
+      ]
+    }
   },
   "settings": {
     "event_subscriptions": {
       "request_url": "https://hpp-message-bot.vercel.app/api/slack/events",
-      "bot_events": ["app_home_opened", "message.im"]
+      "bot_events": [
+        "app_home_opened",
+        "message.im"
+      ]
     },
-    "interactivity": { "is_enabled": true, "request_url": "https://hpp-message-bot.vercel.app/api/slack/interactions" },
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://hpp-message-bot.vercel.app/api/slack/interactions"
+    },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,
     "token_rotation_enabled": false

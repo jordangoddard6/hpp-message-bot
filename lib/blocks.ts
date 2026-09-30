@@ -256,7 +256,7 @@ export function menuBlocks(): Block[] {
       button('🌙 Score now', 'h_score'),
       button('⚙️ Settings', 'h_settings'),
     ]),
-    context('Also: `/hpp start`, `/hpp update`, `/hpp score`, `/hpp pause`, `/hpp resume`. ' +
+    context('Also: `/hpp-start`, `/hpp-update`, `/hpp-score`, `/hpp-pause`, `/hpp-resume`, `/hpp-settings`. ' +
       'Your Home tab has your checklist and settings.'),
   ];
 }

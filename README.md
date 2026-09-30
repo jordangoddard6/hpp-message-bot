@@ -28,7 +28,9 @@ starts that session.
 
 ## Commands
 
-`/hpp` shows a menu. Also `/hpp start`, `update`, `score`, `pause`, `resume`, `settings`.
+`/hpp` shows a menu. Each option is also its own command so it appears in Slack's
+autocomplete: `/hpp-start`, `/hpp-update`, `/hpp-score`, `/hpp-pause`, `/hpp-resume`,
+`/hpp-settings` (`/hpp start` etc. work too).
 While answering: `BACK`, `SKIP` (or the buttons). After a failed doc creation: `RETRY`.
 
 ## Setup
