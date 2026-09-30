@@ -16,7 +16,7 @@
     "slash_commands": [
       {
         "command": "/hpp",
-        "url": "https://APP_DOMAIN/api/slack/commands",
+        "url": "https://hpp-message-bot.vercel.app/api/slack/commands",
         "description": "Plan today, update tasks, or score your day",
         "usage_hint": "[start | update | score | pause | resume | settings]",
         "should_escape": false
@@ -28,10 +28,10 @@
   },
   "settings": {
     "event_subscriptions": {
-      "request_url": "https://APP_DOMAIN/api/slack/events",
+      "request_url": "https://hpp-message-bot.vercel.app/api/slack/events",
       "bot_events": ["app_home_opened", "message.im"]
     },
-    "interactivity": { "is_enabled": true, "request_url": "https://APP_DOMAIN/api/slack/interactions" },
+    "interactivity": { "is_enabled": true, "request_url": "https://hpp-message-bot.vercel.app/api/slack/interactions" },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,
     "token_rotation_enabled": false

@@ -38,7 +38,7 @@ While answering: `BACK`, `SKIP` (or the buttons). After a failed doc creation: `
    `https://<your domain>/api/google/callback`. Consent screen: External, scopes `openid`,
    `email`, `.../auth/drive.file`, **publishing status: In production** (Testing expires tokens
    after 7 days). Enable the Google Drive API and Google Docs API.
-3. Slack: create an app **from a manifest** using `slack-manifest.json` (replace `APP_DOMAIN`),
+3. Slack: create an app **from a manifest** using `slack-manifest.json` (update the URLs if you deploy elsewhere),
    then install it to the workspace.
 4. Set the environment variables listed in `.env.example` in Vercel and redeploy.
 
